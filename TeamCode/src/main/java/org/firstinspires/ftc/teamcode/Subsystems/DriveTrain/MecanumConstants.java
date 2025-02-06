@@ -1,0 +1,40 @@
+package org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
+
+public class MecanumConstants {
+    public static class WheelConstants {
+        public static final double WHEEL_DIAMETER = 0.175;
+        public static final double WHEEL_RADIUS = WHEEL_DIAMETER / 2;
+    }
+
+    public static class MotorConstants {
+        public static double GEAR_RATIO = 1.0 / 12.0;
+        // Gear ratio * pi * wheel diamater
+        public static final double MAX_RPM = 6000;
+        public static final double MAX_ANGULAR_VELOCITY_IN_DEGREES = 80;
+
+        // 0.7 mitigates the final value obtained
+        public static final double MAX_MPS_DRIVE = (GEAR_RATIO * WheelConstants.WHEEL_RADIUS * Math.PI) / 60 * 0.7;
+        //public static final double 
+    }
+
+    public static class ConversionFactors {
+        public static final double MOTOR_RPM_TO_METERS = MotorConstants.GEAR_RATIO * Math.PI * WheelConstants.WHEEL_DIAMETER;
+        public static final double MOTOR_RPM_TO_METERS_PER_SECOND = MOTOR_RPM_TO_METERS / 60.0;
+
+        public static final double MOTOR_METERS_PER_SECOND_TO_DEGREES = 1 / WheelConstants.WHEEL_RADIUS;
+    }
+
+    public static class IDs {
+        public static final String FRONT_LEFT_ID = "frontLeft";
+        public static final String FRONT_RIGHT_ID = "frontRight";
+        public static final String BACK_LEFT_ID = "backLeft";
+        public static final String BACK_RIGHT_ID = "backRight";
+    }
+
+    public static class PIDFCoefficients {
+        public static final double kP = 0.004;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kFF = 0.0;
+    }
+}
