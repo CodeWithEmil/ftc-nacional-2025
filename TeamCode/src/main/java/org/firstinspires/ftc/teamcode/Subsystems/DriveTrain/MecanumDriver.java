@@ -20,10 +20,10 @@ public class MecanumDriver {
     Pair<Double, Double> rightJoystick;
 
     public MecanumDriver(
-        Supplier<Double> leftX, Supplier<Double> leftY, Supplier<Double> rightX, Supplier<Double> rightY
+            Supplier<Pair<Double, Double>> leftJoystick, Supplier<Pair<Double, Double>> rightJoystick
     ) {
-        this.leftJoystick = new Pair<>(leftX.get(), leftY.get());
-        this.rightJoystick = new Pair<>(rightX.get(), rightY.get());
+        this.leftJoystick = leftJoystick.get();
+        this.rightJoystick = rightJoystick.get();
 
     }
 
@@ -41,6 +41,13 @@ public class MecanumDriver {
         mecanumSubsystem.drive(getDesiredSpeeds());
     }
 
+    public SparkFunOTOS getOTOS() {
+        return otos;
+    }
+
+    public IMU getIMU() {
+        return imu;
+    }
 
     public Rotation2d getGyroYaw() {
         // Get the current position from the gyro sensor
