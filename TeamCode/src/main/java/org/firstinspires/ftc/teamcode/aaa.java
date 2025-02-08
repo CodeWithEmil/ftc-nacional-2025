@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain.MecanumConstants;
 
 @TeleOp(name = "CMD-aaa", group = "OpMode")
@@ -27,7 +28,7 @@ public class aaa extends CommandOpMode {
         waitForStart();
 
         while (!isStopRequested() && opModeIsActive()) {
-            m.setPower(1.0);
+            m.setVelocity(1.0, AngleUnit.DEGREES);
 
 
             telemetry.update();

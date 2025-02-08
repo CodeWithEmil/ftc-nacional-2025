@@ -63,10 +63,10 @@ public class MecanumDriver {
         telemetry.addData("leftY", leftJoystick.second);
         telemetry.addData("rightX", rightJoystick.first);
         telemetry.addData("rightY", rightJoystick.second);*/
-        telemetry.addData("forwardVelocity", forwardVelocity);
+        /*telemetry.addData("forwardVelocity", forwardVelocity);
         telemetry.addData("strafeVelocity", strafeVelocity);
         telemetry.addData("angularVelocity", angularVelocity);
-        telemetry.update();
+        telemetry.update();*/
 
         return ChassisSpeeds.fromFieldRelativeSpeeds(
             forwardVelocity, strafeVelocity, angularVelocity, getGyroYaw()

@@ -50,22 +50,22 @@ public class MecanumDriveTrain extends SubsystemBase {
         backRight = hardwareMap.get(DcMotorEx.class, IDs.BACK_RIGHT_ID);
 
         // Mecanum requires you to reverse two motors, depending on your convention
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorEx.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorEx.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
 
         // Set brake mode
-        frontLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Reset encoders
-        frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Setting individual PIDF coefficients for each motor
         frontLeft.setVelocityPIDFCoefficients(
@@ -82,10 +82,10 @@ public class MecanumDriveTrain extends SubsystemBase {
         );
 
         // Set the motors to use the encoders
-        frontLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        frontRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        backLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        backRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
@@ -99,30 +99,34 @@ public class MecanumDriveTrain extends SubsystemBase {
         telemetry.addData("BackLeft — mecanumDriveTrain", wheelSpeeds.rearLeftMetersPerSecond);
         telemetry.addData("BackRight — mecanumDriveTrain", wheelSpeeds.rearRightMetersPerSecond);*/
 
+        setDesiredVelocities(wheelSpeeds);
+    }
 
-
-
-        //setDesiredVelocities(wheelSpeeds);
-
-        telemetry.addData("Estoy vivo", true);
+    public void setDesiredVelocities(MecanumDriveWheelSpeeds wheelSpeeds) {
+        telemetry.addData("Estoy vivo  MUEVANME", true);
         double conversionFactor = ConversionFactors.MOTOR_METERS_PER_SECOND_TO_DEGREES;
+
+        telemetry.addData("FrontLeft — ConversionFactor", wheelSpeeds.frontLeftMetersPerSecond * conversionFactor);
+        telemetry.addData("FrontRight — ConversionFactor", wheelSpeeds.frontRightMetersPerSecond * conversionFactor);
+        telemetry.addData("BackLeft — ConversionFactor", wheelSpeeds.rearLeftMetersPerSecond * conversionFactor);
+        telemetry.addData("BackRight — ConversionFactor", wheelSpeeds.rearRightMetersPerSecond * conversionFactor);
+
+        // Individual wheel speeds, after being multiplied by the conversion factor, is passed to the
+        // setVelocity() method as degrees (value it takes, declared in the second parameter)
         frontLeft.setVelocity(wheelSpeeds.frontLeftMetersPerSecond * conversionFactor, AngleUnit.DEGREES);
         frontRight.setVelocity(wheelSpeeds.frontRightMetersPerSecond * conversionFactor, AngleUnit.DEGREES);
         backLeft.setVelocity(wheelSpeeds.rearLeftMetersPerSecond * conversionFactor, AngleUnit.DEGREES);
         backRight.setVelocity(wheelSpeeds.rearRightMetersPerSecond * conversionFactor, AngleUnit.DEGREES);
-    }
 
-    public void setDesiredVelocities(MecanumDriveWheelSpeeds wheelSpeeds) {
-        telemetry.addData("Estoy vivo", true);
-        double conversionFactor = ConversionFactors.MOTOR_METERS_PER_SECOND_TO_DEGREES;
+        //frontLeft.setPower(0.6);
+        //frontRight.setPower(0.6);
+        //backLeft.setPower(0.6);
+        //frontLeft.setPower(wheelSpeeds.normalize(40));
+        //frontLeft.setPower(wheelSpeeds.frontLeftMetersPerSecond * 0.3);
+        //telemetry.addData("frontLeft — Power set", wheelSpeeds.frontLeftMetersPerSecond * 0.3);
+        //telemetry.addData("frontLeftMPS", wheelSpeeds.frontLeftMetersPerSecond);
 
-        // Individual wheel speeds, after being multiplied by the conversion factor, is passed to the
-        // setVelocity() method as degrees (value it takes, declared in the second parameter)
-        /*frontLeft.setVelocity(wheelSpeeds.frontLeftMetersPerSecond * conversionFactor, AngleUnit.DEGREES);
-        frontRight.setVelocity(wheelSpeeds.frontRightMetersPerSecond * conversionFactor, AngleUnit.DEGREES);
-        backLeft.setVelocity(wheelSpeeds.rearLeftMetersPerSecond * conversionFactor, AngleUnit.DEGREES);
-        backRight.setVelocity(wheelSpeeds.rearRightMetersPerSecond * conversionFactor, AngleUnit.DEGREES);*/
-        frontLeft.setVelocity(80, AngleUnit.DEGREES);
+        //frontLeft.setVelocity(80, AngleUnit.DEGREES);
     }
 
     public void stopMotors() {

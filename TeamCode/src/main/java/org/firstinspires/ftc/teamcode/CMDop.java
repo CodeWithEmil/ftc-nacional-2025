@@ -60,8 +60,8 @@ public class CMDop extends CommandOpMode {
             if (controller.getButton(GamepadKeys.Button.A)) {
                 telemetry.addData("A button pressed", true);
             }
-            mecanumSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));/*
-            if (controller.getLeftY() > 0.0 || controller.getLeftX() > 0.0) {
+            //mecanumSubsystem.drive(new ChassisSpeeds(0.5, 0.5, 0.5));
+            /*if (controller.getLeftY() > 0.0 || controller.getLeftX() > 0.0) {
                 telemetry.addData("Current lecture of L stick Y", controller.getLeftY());
                 telemetry.addData("Current lecture of L stick X", controller.getLeftX());
             }*/
