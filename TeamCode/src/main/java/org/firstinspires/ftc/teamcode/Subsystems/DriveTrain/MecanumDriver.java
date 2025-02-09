@@ -56,7 +56,7 @@ public class MecanumDriver {
 
         double forwardVelocity = leftJoystick.first * MecanumConstants.MotorConstants.MAX_MPS_DRIVE;
         double strafeVelocity = leftJoystick.second * MecanumConstants.MotorConstants.MAX_MPS_DRIVE;
-        double angularVelocity = rightJoystick.first * MecanumConstants.MotorConstants.MAX_ANGULAR_VELOCITY_IN_DEGREES; // TODO: get max angular velocity
+        double angularVelocity = rightJoystick.first * MecanumConstants.MotorConstants.MAX_ANGULAR_VELOCITY;
 
         // Telemetría
         /*telemetry.addData("leftX", leftJoystick.first);

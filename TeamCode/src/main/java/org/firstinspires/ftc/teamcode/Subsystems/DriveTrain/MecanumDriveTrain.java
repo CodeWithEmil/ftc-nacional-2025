@@ -4,7 +4,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain.MecanumConstants.IDs
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain.MecanumConstants.ConversionFactors;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain.MecanumConstants.PIDFCoefficients;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Translation2d;
 
 
@@ -13,7 +12,6 @@ import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveKinematics
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -105,33 +103,38 @@ public class MecanumDriveTrain extends SubsystemBase {
     }
 
     public void setDesiredVelocities(MecanumDriveWheelSpeeds wheelSpeeds) {
-        double conversionFactor = ConversionFactors.MOTOR_METERS_PER_SECOND_TO_DEGREES;
 
-        double flVelocity = wheelSpeeds.frontLeftMetersPerSecond * conversionFactor;
-        double frVelocity = wheelSpeeds.frontRightMetersPerSecond * conversionFactor;
-        double blVelocity = wheelSpeeds.rearLeftMetersPerSecond * conversionFactor;
-        double brVelocity = wheelSpeeds.rearRightMetersPerSecond * conversionFactor;
+        // 9-Feb-2025
+        // Conversion factor seteado de metros por segundo (velocidad lineal) a
+        // radianes por segundo (velocidad angular)
+        double conversionFactor = ConversionFactors.MOTOR_MPS_TO_RADPS;
+
+        double frontLeftVelocity = wheelSpeeds.frontLeftMetersPerSecond * conversionFactor;
+        double frontRightVelocity = wheelSpeeds.frontRightMetersPerSecond * conversionFactor;
+        double backLeftVelocity = wheelSpeeds.rearLeftMetersPerSecond * conversionFactor;
+        double backRightVelocity = wheelSpeeds.rearRightMetersPerSecond * conversionFactor;
 
         // 8-feb-2025 Telemetría añadida para ver los valores pasados:
         // 8-feb-2025 Si son raros, entonces es tema del conversion factor
-        telemetry.addData("frontLeft Velocity (deg/s)", flVelocity);
-        telemetry.addData("frontRight Velocity (deg/s)", frVelocity);
-        telemetry.addData("backLeft Velocity (deg/s)", blVelocity);
-        telemetry.addData("backRight Velocity (deg/s)", brVelocity);
+        telemetry.addData("frontLeft Velocity (rads/s)", frontLeftVelocity);
+        telemetry.addData("frontRight Velocity (rads/s)", frontRightVelocity);
+        telemetry.addData("backLeft Velocity (rads/s)", backLeftVelocity);
+        telemetry.addData("backRight Velocity (rads/s)", backRightVelocity);
         telemetry.update();
 
         // Individual wheel speeds, after being multiplied by the conversion factor, is passed to the
-        // setVelocity() method as degrees (value it takes, declared in the second parameter)
-        frontLeft.setVelocity(flVelocity, AngleUnit.DEGREES);
-        frontRight.setVelocity(frVelocity, AngleUnit.DEGREES);
-        backLeft.setVelocity(blVelocity, AngleUnit.DEGREES);
-        backRight.setVelocity(brVelocity, AngleUnit.DEGREES);
+        // setVelocity() method as radians (value it takes, declared in the second parameter)
+        frontLeft.setVelocity(frontLeftVelocity, AngleUnit.RADIANS);
+        frontRight.setVelocity(frontRightVelocity, AngleUnit.RADIANS);
+        backLeft.setVelocity(backLeftVelocity, AngleUnit.RADIANS);
+        backRight.setVelocity(backRightVelocity, AngleUnit.RADIANS);
 
         // 8-feb-2025 si esta telemetría jala, entonces el problema tiene que ver
         // 8-feb-2025 con que .setVelocity no se está llamando correctamente
-        telemetry.addData("la velocidad fue seteada!", true);
+        telemetry.addData("la velocidad fue seteada correctamente", true);
         telemetry.update();
 
+        // 9-Feb-2025 !!! Update: si se llega a probar, utilizar AngleUnit.RADIANS
         // 8-feb-2025 También debemos probar el siguiente código:
         // 8-feb-2025 Si sigue sin moverse, es tema de los PIDs
         /*frontLeft.setVelocity(300, AngleUnit.DEGREES);
