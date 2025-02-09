@@ -87,46 +87,59 @@ public class MecanumDriveTrain extends SubsystemBase {
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+
+        // 8-feb-2025 Telemetría añadida para ver si el encoder funciona
+        // 8-feb-2025 Según la documentación, debería regresar RUN_USING_ENCODER
+        telemetry.addData("Front Left Mode", frontLeft.getMode());
+        telemetry.addData("Front Right Mode", frontRight.getMode());
+        telemetry.addData("Back Left Mode", backLeft.getMode());
+        telemetry.addData("Back Right Mode", backRight.getMode());
+        telemetry.update();
+
     }
 
     public void drive(ChassisSpeeds speeds) {
         MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
 
-
-        // Todo: check telemetry
-        /*telemetry.addData("FrontLeft — mecanumDriveTrain", wheelSpeeds.frontLeftMetersPerSecond);
-        telemetry.addData("FrontRight — mecanumDriveTrain", wheelSpeeds.frontRightMetersPerSecond);
-        telemetry.addData("BackLeft — mecanumDriveTrain", wheelSpeeds.rearLeftMetersPerSecond);
-        telemetry.addData("BackRight — mecanumDriveTrain", wheelSpeeds.rearRightMetersPerSecond);*/
-
         setDesiredVelocities(wheelSpeeds);
     }
 
     public void setDesiredVelocities(MecanumDriveWheelSpeeds wheelSpeeds) {
-        telemetry.addData("Estoy vivo  MUEVANME", true);
         double conversionFactor = ConversionFactors.MOTOR_METERS_PER_SECOND_TO_DEGREES;
 
-        telemetry.addData("FrontLeft — ConversionFactor", wheelSpeeds.frontLeftMetersPerSecond * conversionFactor);
-        telemetry.addData("FrontRight — ConversionFactor", wheelSpeeds.frontRightMetersPerSecond * conversionFactor);
-        telemetry.addData("BackLeft — ConversionFactor", wheelSpeeds.rearLeftMetersPerSecond * conversionFactor);
-        telemetry.addData("BackRight — ConversionFactor", wheelSpeeds.rearRightMetersPerSecond * conversionFactor);
+        double flVelocity = wheelSpeeds.frontLeftMetersPerSecond * conversionFactor;
+        double frVelocity = wheelSpeeds.frontRightMetersPerSecond * conversionFactor;
+        double blVelocity = wheelSpeeds.rearLeftMetersPerSecond * conversionFactor;
+        double brVelocity = wheelSpeeds.rearRightMetersPerSecond * conversionFactor;
+
+        // 8-feb-2025 Telemetría añadida para ver los valores pasados:
+        // 8-feb-2025 Si son raros, entonces es tema del conversion factor
+        telemetry.addData("frontLeft Velocity (deg/s)", flVelocity);
+        telemetry.addData("frontRight Velocity (deg/s)", frVelocity);
+        telemetry.addData("backLeft Velocity (deg/s)", blVelocity);
+        telemetry.addData("backRight Velocity (deg/s)", brVelocity);
+        telemetry.update();
 
         // Individual wheel speeds, after being multiplied by the conversion factor, is passed to the
         // setVelocity() method as degrees (value it takes, declared in the second parameter)
-        frontLeft.setVelocity(wheelSpeeds.frontLeftMetersPerSecond * conversionFactor, AngleUnit.DEGREES);
-        frontRight.setVelocity(wheelSpeeds.frontRightMetersPerSecond * conversionFactor, AngleUnit.DEGREES);
-        backLeft.setVelocity(wheelSpeeds.rearLeftMetersPerSecond * conversionFactor, AngleUnit.DEGREES);
-        backRight.setVelocity(wheelSpeeds.rearRightMetersPerSecond * conversionFactor, AngleUnit.DEGREES);
+        frontLeft.setVelocity(flVelocity, AngleUnit.DEGREES);
+        frontRight.setVelocity(frVelocity, AngleUnit.DEGREES);
+        backLeft.setVelocity(blVelocity, AngleUnit.DEGREES);
+        backRight.setVelocity(brVelocity, AngleUnit.DEGREES);
 
-        //frontLeft.setPower(0.6);
-        //frontRight.setPower(0.6);
-        //backLeft.setPower(0.6);
-        //frontLeft.setPower(wheelSpeeds.normalize(40));
-        //frontLeft.setPower(wheelSpeeds.frontLeftMetersPerSecond * 0.3);
-        //telemetry.addData("frontLeft — Power set", wheelSpeeds.frontLeftMetersPerSecond * 0.3);
-        //telemetry.addData("frontLeftMPS", wheelSpeeds.frontLeftMetersPerSecond);
+        // 8-feb-2025 si esta telemetría jala, entonces el problema tiene que ver
+        // 8-feb-2025 con que .setVelocity no se está llamando correctamente
+        telemetry.addData("la velocidad fue seteada!", true);
+        telemetry.update();
 
-        //frontLeft.setVelocity(80, AngleUnit.DEGREES);
+        // 8-feb-2025 También debemos probar el siguiente código:
+        // 8-feb-2025 Si sigue sin moverse, es tema de los PIDs
+        /*frontLeft.setVelocity(300, AngleUnit.DEGREES);
+        frontRight.setVelocity(300, AngleUnit.DEGREES);
+        backLeft.setVelocity(300, AngleUnit.DEGREES);
+        backRight.setVelocity(300, AngleUnit.DEGREES);
+        telemetry.addData("velocity fue seteado manualmente a # grados: ", 300);
+        telemetry.update();*/
     }
 
     public void stopMotors() {

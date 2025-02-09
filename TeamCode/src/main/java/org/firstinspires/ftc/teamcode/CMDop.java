@@ -33,8 +33,7 @@ public class CMDop extends CommandOpMode {
 
         // Initializing a new controller
         controller = new GamepadEx(gamepad1);
-
-        // todo: Regresar este comando adentro de configureBindings() y hacer una prueba si todo funciona
+        
         configureBindings();
     }
 
@@ -52,7 +51,6 @@ public class CMDop extends CommandOpMode {
 
     @Override
     public void runOpMode() {
-        //telemetry.addData("RunOP", true);
         initialize();
         waitForStart();
 
@@ -67,7 +65,10 @@ public class CMDop extends CommandOpMode {
             }*/
 
             telemetry.update();
-            run();
+            // 8-feb-2025 acabo de leer en la documentación que llamar run() es malo
+            // 8-feb-2025 porque te rompe el ciclo de comandos que se inicializan cuando llamas
+            // 8-feb-2025 a waitForStart(), entonces comenté run() para que no interfiera
+            // run();
         }
         reset();
     }
