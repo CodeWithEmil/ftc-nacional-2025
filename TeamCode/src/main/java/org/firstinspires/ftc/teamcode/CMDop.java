@@ -33,7 +33,7 @@ public class CMDop extends CommandOpMode {
 
         // Initializing a new controller
         controller = new GamepadEx(gamepad1);
-        
+
         configureBindings();
     }
 
