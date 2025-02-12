@@ -7,6 +7,10 @@ public class SliderConstants {
         public static String sliderLeftMotorId = "sliderLeftMotor";
     }
 
+    public static class ConversionFactors {
+        public static double ticksToRevsConversionFactor = 1 / 537.7;
+    }
+
 
     // Slider angle
     public static class AngleIDs {

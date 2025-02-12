@@ -21,12 +21,11 @@ public class MecanumConstants {
         // public static final double MAX_ANGULAR_VELOCITY_IN_DEGREES = MAX_RPM / 60 * (360);
         // el 360 se refiere a la cantidad de grados en una rotación
         // Math.PI * 2 lo convierte a radianes, que es la unidad estándar
-        public static final double MAX_ANGULAR_VELOCITY = MAX_RPM / 60 * (Math.PI * 2);
 
-
-
-        // 0.7 mitigates the final value obtained
-        public static final double MAX_MPS_DRIVE = 1.5; //(GEAR_RATIO * WheelConstants.WHEEL_RADIUS * Math.PI) / 60;
+        // Modifiqué esta fórmula para que controle toda la velocidad de rotación del robot directamente, no solo
+        // aquella de los motores
+        public static final double MAX_ANGULAR_VELOCITY = (MAX_RPM / 60) * (Math.PI * 2) * WheelConstants.WHEEL_RADIUS;
+        public static final double MAX_MPS_DRIVE = (MAX_RPM / 60) * (Math.PI * 2) * WheelConstants.WHEEL_RADIUS;//1.5; (GEAR_RATIO * WheelConstants.WHEEL_RADIUS * Math.PI) / 60;
         public static final double TICKS_PER_REVOLUTION = 28.0;
     }
 
@@ -57,14 +56,10 @@ public class MecanumConstants {
         public static final String BACK_RIGHT_ID = "backRight";
     }
 
-
-    // 9-Feb-2025 SUPER MODIFIQUÉ LOS PIDS PARA VER SI ESE ES EL TEMA
-    // 9-Feb-2025 PREFIERO QUE SALGA DISPARADO, A QUE FUNCIONE PERO NO LO VEAMOS PORQUE LOS PIDS SON BAJOS
-    // 9-Feb-2025 nomás les sume 20 a todos
     public static class PIDFCoefficients {
-        public static final double kP = 20.0;
-        public static final double kI = 20.0;
-        public static final double kD = 20.0;
-        public static final double kFF = 21.2;
+        public static final double kP = 1.2; // 0.8
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kFF = 1.5; // 1.0
     }
 }

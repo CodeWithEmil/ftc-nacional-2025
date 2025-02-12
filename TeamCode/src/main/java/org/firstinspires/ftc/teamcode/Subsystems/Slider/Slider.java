@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Slider.SliderConstants.SliderIDs;
+import org.firstinspires.ftc.teamcode.Subsystems.Slider.SliderConstants.ConversionFactors;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -34,6 +35,14 @@ public class Slider extends SubsystemBase {
 
         leftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+    }
+
+    public double getRightEncoderPosition() {
+        return rightMotor.getCurrentPosition() * ConversionFactors.ticksToRevsConversionFactor;
+    }
+
+    public double getLeftEncoderPosition() {
+        return leftMotor.getCurrentPosition() * ConversionFactors.ticksToRevsConversionFactor;
     }
 
     @Override

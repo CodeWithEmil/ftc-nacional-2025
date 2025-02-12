@@ -12,6 +12,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.ChassisSpeeds;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Subsystems.Arm.Arm;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain.MecanumDriveTrain;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain.MecanumDriver;
 
@@ -21,33 +22,55 @@ public class CMDop extends CommandOpMode {
     MecanumDriveTrain mecanumSubsystem;
     MecanumDriver mecanumDriver;
 
+    // Arm subsystem
+    Arm arm;
+
     @Override
     public void initialize() {
         mecanumSubsystem  = new MecanumDriveTrain(hardwareMap, telemetry);
         mecanumDriver = new MecanumDriver(
                 () -> new Pair<>((double) -gamepad1.left_stick_x, (double) -gamepad1.left_stick_y),
-                () -> new Pair<>((double) -gamepad1.right_stick_x, (double) -gamepad1.right_stick_y),
+                () -> new Pair<>((double) gamepad1.right_stick_x, (double) -gamepad1.right_stick_y),
                 hardwareMap,
                 telemetry
         );
 
         // Initializing a new controller
         controller = new GamepadEx(gamepad1);
+        mecanumDriver.otos.resetTracking();
+        mecanumDriver.imu.resetYaw();
+
+        // Arm declaration
+        arm = new Arm(hardwareMap, telemetry);
 
         configureBindings();
     }
 
     public void configureBindings() {
 
-        mecanumSubsystem.setDefaultCommand(
-                new RunCommand(() -> mecanumDriver.apply(mecanumSubsystem), mecanumSubsystem));
+        mecanumSubsystem.setDefaultCommand(new RunCommand(() -> mecanumDriver.apply(mecanumSubsystem), mecanumSubsystem));
 
         new GamepadButton(controller, GamepadKeys.Button.START)
                 .whenPressed(new InstantCommand(() -> {
                     mecanumDriver.getOTOS().resetTracking();
                     mecanumDriver.getIMU().resetYaw();
                 }));
+
+        new GamepadButton(controller, GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(new InstantCommand(() -> {
+                    arm.changePosition();
+                }));
     }
+
+    /*@Override
+    public void run() {
+        if (controller.getButton(GamepadKeys.Button.A)) {
+            telemetry.addData("A button pressed", true);
+        }
+
+        telemetry.update();
+        super.run();
+    }*/
 
     @Override
     public void runOpMode() {
@@ -56,20 +79,22 @@ public class CMDop extends CommandOpMode {
 
         while (!isStopRequested() && opModeIsActive()) {
             if (controller.getButton(GamepadKeys.Button.A)) {
-                telemetry.addData("A button pressed", true);
+                arm.changePosition();
             }
             //mecanumSubsystem.drive(new ChassisSpeeds(0.5, 0.5, 0.5));
             /*if (controller.getLeftY() > 0.0 || controller.getLeftX() > 0.0) {
                 telemetry.addData("Current lecture of L stick Y", controller.getLeftY());
                 telemetry.addData("Current lecture of L stick X", controller.getLeftX());
-            }*/
+            }
 
             telemetry.update();
             // 8-feb-2025 acabo de leer en la documentación que llamar run() es malo
             // 8-feb-2025 porque te rompe el ciclo de comandos que se inicializan cuando llamas
-            // 8-feb-2025 a waitForStart(), entonces comenté run() para que no interfiera
-            // run();
+            // 8-feb-2025 a waitForStart(), entonces comenté run() para que no interfiera*/
+            telemetry.update();
+            run();
         }
         reset();
+
     }
 }

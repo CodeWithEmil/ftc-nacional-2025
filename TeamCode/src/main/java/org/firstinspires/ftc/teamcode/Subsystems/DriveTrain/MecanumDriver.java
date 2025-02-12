@@ -4,30 +4,25 @@ import androidx.core.util.Pair;
 
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.ChassisSpeeds;
-import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.function.Supplier;
 
 public class MecanumDriver {
-    IMU imu;
-    SparkFunOTOS otos;
+    public IMU imu;
+    public SparkFunOTOS otos;
     Telemetry telemetry;
 
     double DEAD_BAND = 0.1;
-
-    // En lugar de guardar valores estáticos, los cambié por suppliers directamente
-    // Antes: Pair<Double, Double> leftJoystick;
-    // Antes: Pair<Double, Double> rightJoystick;
-    // Después:
     private final Supplier<Pair<Double, Double>> leftJoystickSupplier;
     private final Supplier<Pair<Double, Double>> rightJoystickSupplier;
 
-    // TODO: Verificar si las posiciones de los joysticks son constantemente actualizadas
     public MecanumDriver(
             Supplier<Pair<Double, Double>> leftJoystick, Supplier<Pair<Double, Double>> rightJoystick,
             HardwareMap hardwareMap, Telemetry telemetry
@@ -43,7 +38,13 @@ public class MecanumDriver {
         this.rightJoystickSupplier = rightJoystick;
 
         otos = hardwareMap.get(SparkFunOTOS.class, "otos");
+        otos.setAngularUnit(AngleUnit.DEGREES);
+        otos.setLinearUnit(DistanceUnit.INCH);
+        //otos.resetTracking();
+
         imu = hardwareMap.get(IMU.class, "imu");
+        //imu.resetYaw();
+
         this.telemetry = telemetry;
     }
 
@@ -56,7 +57,7 @@ public class MecanumDriver {
 
         double forwardVelocity = leftJoystick.first * MecanumConstants.MotorConstants.MAX_MPS_DRIVE;
         double strafeVelocity = leftJoystick.second * MecanumConstants.MotorConstants.MAX_MPS_DRIVE;
-        double angularVelocity = rightJoystick.first * MecanumConstants.MotorConstants.MAX_ANGULAR_VELOCITY;
+        double angularVelocity = rightJoystick.first * MecanumConstants.MotorConstants.MAX_ANGULAR_VELOCITY; // * 0.8
 
         // Telemetría
         /*telemetry.addData("leftX", leftJoystick.first);
@@ -88,7 +89,10 @@ public class MecanumDriver {
 
     public Rotation2d getGyroYaw() {
         // Get the current position from the gyro sensor
-        return Rotation2d.fromDegrees(otos.getPosition().h);
+        // Se tiene que negar el valor del Otos para que las posiciones del joystick sean interpretadas
+        // correctamente cuando el robot está en posición perpendicular a la de inicio (a 90º)
+        return Rotation2d.fromDegrees(-otos.getPosition().h); // orientado a la cancha
+        // orientado al robot: return Rotation2d.fromDegrees(-imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
     }
 
 

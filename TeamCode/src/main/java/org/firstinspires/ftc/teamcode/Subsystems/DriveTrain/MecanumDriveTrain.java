@@ -12,6 +12,7 @@ import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveKinematics
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -48,10 +49,10 @@ public class MecanumDriveTrain extends SubsystemBase {
         backRight = hardwareMap.get(DcMotorEx.class, IDs.BACK_RIGHT_ID);
 
         // Mecanum requires you to reverse two motors, depending on your convention
-        frontLeft.setDirection(DcMotor.Direction.FORWARD);
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
 
         // Set brake mode
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -88,11 +89,11 @@ public class MecanumDriveTrain extends SubsystemBase {
 
         // 8-feb-2025 Telemetría añadida para ver si el encoder funciona
         // 8-feb-2025 Según la documentación, debería regresar RUN_USING_ENCODER
-        telemetry.addData("Front Left Mode", frontLeft.getMode());
+        /*telemetry.addData("Front Left Mode", frontLeft.getMode());
         telemetry.addData("Front Right Mode", frontRight.getMode());
         telemetry.addData("Back Left Mode", backLeft.getMode());
         telemetry.addData("Back Right Mode", backRight.getMode());
-        telemetry.update();
+        telemetry.update();*/
 
     }
 
@@ -120,7 +121,10 @@ public class MecanumDriveTrain extends SubsystemBase {
         telemetry.addData("frontRight Velocity (rads/s)", frontRightVelocity);
         telemetry.addData("backLeft Velocity (rads/s)", backLeftVelocity);
         telemetry.addData("backRight Velocity (rads/s)", backRightVelocity);
-        telemetry.update();
+        /*telemetry.addData("frontLeft power (%)", wheelSpeeds.);
+        telemetry.addData("frontRight power (%)", frontRightVelocity);
+        telemetry.addData("backLeft power (%)", backLeftVelocity);
+        telemetry.addData("backRight power (%)", backRightVelocity);*/
 
         // Individual wheel speeds, after being multiplied by the conversion factor, is passed to the
         // setVelocity() method as radians (value it takes, declared in the second parameter)
@@ -131,8 +135,7 @@ public class MecanumDriveTrain extends SubsystemBase {
 
         // 8-feb-2025 si esta telemetría jala, entonces el problema tiene que ver
         // 8-feb-2025 con que .setVelocity no se está llamando correctamente
-        telemetry.addData("la velocidad fue seteada correctamente", true);
-        telemetry.update();
+        //telemetry.addData("la velocidad fue seteada correctamente", true);
 
         // 9-Feb-2025 !!! Update: si se llega a probar, utilizar AngleUnit.RADIANS
         // 8-feb-2025 También debemos probar el siguiente código:
